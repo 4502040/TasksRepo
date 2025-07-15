@@ -5,15 +5,38 @@ namespace App\Repository;
 use App\Entity\Task;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @extends ServiceEntityRepository<Task>
  */
 class TaskRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private PaginatorInterface $paginator;
+
+    public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
     {
         parent::__construct($registry, Task::class);
+        $this->paginator = $paginator;
+    }
+
+    public function findAllPaginated(string $status, int $page, int $limit)
+    {
+        $query = $this->createQueryBuilder('t')
+            ->orderBy('t.createdAt', 'DESC');
+            
+
+        if (!empty($status)){
+            $query
+            ->andWhere('t.status = :status')
+            ->setParameter('status', $status);
+        }
+        
+        return $this->paginator->paginate(
+            $query->getQuery(),
+            $page,
+            $limit
+        );
     }
 
     //    /**

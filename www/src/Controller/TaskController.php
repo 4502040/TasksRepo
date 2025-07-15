@@ -7,12 +7,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\TaskRepository;
 use App\Entity\Task;
-use App\Dto\CreateTaskDto;
+use App\Dto\TaskDto;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Psr\Log\LoggerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 #[Route('/api/tasks', name: 'api_tasks_')]
 final class TaskController extends AbstractController
@@ -22,10 +23,27 @@ final class TaskController extends AbstractController
     ) {}
     
     #[Route('', name: 'get_all', methods: ['GET'])]
-    public function getAll(TaskRepository $repository): Response
+    public function getAll(
+                    Request $request,
+                    TaskRepository $repository,
+                    PaginatorInterface $paginator
+    ): Response
     {
-        $tasks = $repository->findAll();
-        return $this->json($tasks);
+        $status = $request->query->getString('status', '');
+        $page = $request->query->getInt('page', 1);
+        $limit = $request->query->getInt('limit', 10);
+        
+        $tasks = $repository->findAllPaginated($status, $page, $limit);
+        
+        return $this->json([
+            'data' => $tasks->getItems(),
+            'meta' => [
+                'total' => $tasks->getTotalItemCount(),
+                'page' => $tasks->getCurrentPageNumber(),
+                'limit' => $tasks->getItemNumberPerPage(),
+                'pages' => ceil($tasks->getTotalItemCount() / $tasks->getItemNumberPerPage())
+            ]
+        ]);
     }
     
     #[Route('/{id}', name: 'get_one', methods: ['GET'])]
@@ -62,7 +80,7 @@ final class TaskController extends AbstractController
 
         $dto = $serializer->deserialize(
             $request->getContent(),
-            CreateTaskDto::class,
+            TaskDto::class,
             'json'
         );
 
@@ -82,9 +100,9 @@ final class TaskController extends AbstractController
         }
         
         $task = new Task();
-        $task->setTitle($dto['title'] ?? '');
-        $task->setDescription($dto['description'] ?? null);
-        $task->setStatus($dto['status'] ?? Task::STATUS_NEW);        
+        $task->setTitle($dto->title ?? '');
+        $task->setDescription($dto->description ?? null);
+        $task->setStatus($dto->status ?? Task::STATUS_NEW);        
 
         $em->persist($task);
         $em->flush();

@@ -5,7 +5,7 @@ namespace App\Dto;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\Task;
 
-class CreateTaskDto
+class TaskDto
 {
     #[Assert\NotBlank(
         message: 'Название задачи не может быть пустым'
