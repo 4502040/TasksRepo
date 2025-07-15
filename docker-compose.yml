@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  # PHP + Symfony
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: symfony_app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./www:/var/www
+    depends_on:
+      - db
+    networks:
+      - symfony_network
+    ports:
+      - "8000:8000"
+
+  # Nginx
+  webserver:
+    image: nginx:alpine
+    container_name: symfony_webserver
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    volumes:
+      - ./www:/var/www
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - app
+    networks:
+      - symfony_network
+
+  # PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: symfony_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-symfony}
+      POSTGRES_USER: ${POSTGRES_USER:-symfony}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-symfony}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - symfony_network
+
+  # PGAdmin (опционально)
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: symfony_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    networks:
+      - symfony_network
+
+volumes:
+  postgres_data:
+
+networks:
+  symfony_network:
+    driver: bridge
