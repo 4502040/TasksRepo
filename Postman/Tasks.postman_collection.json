@@ -1,0 +1,433 @@
+{
+	"info": {
+		"_postman_id": "0c9ebb8d-3b58-44d2-88a0-ba09daeee13b",
+		"name": "Tasks",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9242404",
+		"_collection_link": "https://www.postman.com/galactic-shuttle-4373/workspace/teamit/collection/9242404-0c9ebb8d-3b58-44d2-88a0-ba09daeee13b?action=share&source=collection_link&creator=9242404"
+	},
+	"item": [
+		{
+			"name": "Get All",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{apihost}}/api/tasks?page=2",
+					"host": [
+						"{{apihost}}"
+					],
+					"path": [
+						"api",
+						"tasks"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get All By Paging & Limit & Status Filtering",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apihost}}/api/tasks?page=1&limit=5&status=new",
+							"host": [
+								"{{apihost}}"
+							],
+							"path": [
+								"api",
+								"tasks"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								},
+								{
+									"key": "status",
+									"value": "new"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "nginx/1.29.0"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "PHP/8.2.29"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, private"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 16 Jul 2025 06:25:17 GMT"
+						},
+						{
+							"key": "X-Robots-Tag",
+							"value": "noindex"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": [\n        {\n            \"id\": 15,\n            \"title\": \"Test 15\",\n            \"description\": \"Setup environment for developing\",\n            \"status\": \"new\",\n            \"createdAt\": \"2025-07-15T15:40:21+00:00\"\n        },\n        {\n            \"id\": 14,\n            \"title\": \"Test 14\",\n            \"description\": \"Setup environment for developing\",\n            \"status\": \"new\",\n            \"createdAt\": \"2025-07-15T15:34:02+00:00\"\n        },\n        {\n            \"id\": 13,\n            \"title\": \"Test 13\",\n            \"description\": \"Setup environment for developing\",\n            \"status\": \"new\",\n            \"createdAt\": \"2025-07-15T15:33:51+00:00\"\n        },\n        {\n            \"id\": 12,\n            \"title\": \"Test 12\",\n            \"description\": \"Setup environment for developing\",\n            \"status\": \"new\",\n            \"createdAt\": \"2025-07-15T15:33:41+00:00\"\n        },\n        {\n            \"id\": 11,\n            \"title\": \"Test 11\",\n            \"description\": \"Setup environment for developing\",\n            \"status\": \"new\",\n            \"createdAt\": \"2025-07-15T15:33:32+00:00\"\n        }\n    ],\n    \"meta\": {\n        \"total\": 13,\n        \"page\": 1,\n        \"limit\": 5,\n        \"pages\": 3\n    }\n}"
+				},
+				{
+					"name": "Get All By Paging",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apihost}}/api/tasks?page=1",
+							"host": [
+								"{{apihost}}"
+							],
+							"path": [
+								"api",
+								"tasks"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": "",
+					"header": [],
+					"cookie": [
+						{
+							"expires": "Invalid Date"
+						}
+					],
+					"body": ""
+				}
+			]
+		},
+		{
+			"name": "Get By Id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{apihost}}/api/tasks/2",
+					"host": [
+						"{{apihost}}"
+					],
+					"path": [
+						"api",
+						"tasks",
+						"2"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get By Id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apihost}}/api/tasks/2",
+							"host": [
+								"{{apihost}}"
+							],
+							"path": [
+								"api",
+								"tasks",
+								"2"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "nginx/1.29.0"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "PHP/8.2.29"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, private"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 16 Jul 2025 06:28:18 GMT"
+						},
+						{
+							"key": "X-Robots-Tag",
+							"value": "noindex"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 2,\n    \"title\": \"Task 2\",\n    \"description\": \"Setup environment for developing\",\n    \"status\": \"new\",\n    \"createdAt\": \"2025-07-15T12:53:59+00:00\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Create",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Task for Holidays\",\r\n    \"description\": \"Holiday Task description\"    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{apihost}}/api/tasks",
+					"host": [
+						"{{apihost}}"
+					],
+					"path": [
+						"api",
+						"tasks"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Create",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Task for Holidays\",\r\n    \"description\": \"Holiday Task description\"    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apihost}}/api/tasks",
+							"host": [
+								"{{apihost}}"
+							],
+							"path": [
+								"api",
+								"tasks"
+							]
+						}
+					},
+					"_postman_previewlanguage": "",
+					"header": [],
+					"cookie": [],
+					"body": ""
+				}
+			]
+		},
+		{
+			"name": "Update",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{   \r\n    \"title\": \"Task 16\",\r\n    \"description\": \"Setup environment for developing\",\r\n    \"status\":\"completed\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{apihost}}/api/tasks/16",
+					"host": [
+						"{{apihost}}"
+					],
+					"path": [
+						"api",
+						"tasks",
+						"16"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Update",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{   \r\n    \"title\": \"Task 16\",\r\n    \"description\": \"Setup environment for developing\",\r\n    \"status\":\"completed\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apihost}}/api/tasks/16",
+							"host": [
+								"{{apihost}}"
+							],
+							"path": [
+								"api",
+								"tasks",
+								"16"
+							]
+						}
+					},
+					"_postman_previewlanguage": "",
+					"header": [],
+					"cookie": [],
+					"body": ""
+				}
+			]
+		},
+		{
+			"name": "Delete",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{apihost}}/api/tasks/16",
+					"host": [
+						"{{apihost}}"
+					],
+					"path": [
+						"api",
+						"tasks",
+						"16"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{vault:authorization-secret}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
