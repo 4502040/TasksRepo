@@ -6,9 +6,12 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use App\DataFixtures\TaskFixtures;
-
+use App\Entity\User;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 final class TaskControllerTest extends WebTestCase
 {    
+    private $token = "";
 
     protected function setUp(): void
     {
@@ -25,12 +28,25 @@ final class TaskControllerTest extends WebTestCase
         // Загрузка фикстур
         $executor = new ORMExecutor($em, $purger);
         $executor->execute([new TaskFixtures()]);
+
+        $container = self::getContainer();
+        $passwordHasher = $container->get(UserPasswordHasherInterface::class);
+        // Создаем пользователя напрямую
+        $user = new User();
+        $user->setEmail('test@example.com');
+        $user->setPassword($passwordHasher->hashPassword($user, 'password'));
+                
+        $em->persist($user);
+        $em->flush();
+
+        $this->token = $this->authenticate($client,'test@example.com','password');
     }
     
     protected function tearDown(): void
     {
         $em = static::getContainer()->get('doctrine')->getManager();
         $em->createQuery('DELETE FROM App\Entity\Task')->execute();
+        $em->createQuery('DELETE FROM App\Entity\User')->execute();
         parent::tearDown();
     }
 
@@ -38,8 +54,9 @@ final class TaskControllerTest extends WebTestCase
     {
         self::ensureKernelShutdown();
         $client = static::createClient();
-        $client->request('GET', '/api/tasks');
-
+        $client->request('GET', '/api/tasks',
+        [], [], ['HTTP_AUTHORIZATION' => 'Bearer '.$this->token]);
+        
         self::assertResponseIsSuccessful();
     }   
 
@@ -48,8 +65,9 @@ final class TaskControllerTest extends WebTestCase
         self::ensureKernelShutdown();
         $client = static::createClient();
         
-        // Фильтруем по статусу
-        $client->request('GET', '/api/tasks?status=completed');
+        // Фильтруем по статусу    
+        $client->request('GET', '/api/tasks?status=completed',
+        [], [], ['HTTP_AUTHORIZATION' => 'Bearer '.$this->token] );
         
         $this->assertResponseIsSuccessful();
         $response = json_decode($client->getResponse()->getContent(), true);        
@@ -70,7 +88,7 @@ final class TaskControllerTest extends WebTestCase
             '/api/tasks',
             [],
             [],
-            ['CONTENT_TYPE' => 'application/json'],
+            ['CONTENT_TYPE' => 'application/json', 'HTTP_AUTHORIZATION' => 'Bearer '.$this->token],
             json_encode([
                 'title' => 'Valid Task',
                 'status' => 'new'
@@ -96,4 +114,22 @@ final class TaskControllerTest extends WebTestCase
         $this->assertArrayHasKey('errors', $response);
         $this->assertArrayHasKey('status', $response['errors']);
     }    
+
+    private function authenticate(KernelBrowser $client, string $email, string $password): string
+    {
+        $client->request(
+            'POST',
+            '/api/login',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode([
+                'email' => $email,
+                'password' => $password
+            ])
+        );
+        
+        $data = json_decode($client->getResponse()->getContent(), true);
+        return $data['token'];
+    }
 }
